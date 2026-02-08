@@ -1,15 +1,14 @@
-import * as THREE from 'three';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js';
-import { Raycaster } from 'three';
+import * as THREE from "three";
+import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+import * as BufferGeometryUtils from "three/addons/utils/BufferGeometryUtils.js";
+import { Raycaster } from "three";
 
 const scene = new THREE.Scene();
 
 function scaleFactorFormula(w, h) {
-    const widthFactor = w > 700 ? 1.1 : 1.1 * (w / 700 + (700 - w) / 4 / 700); // augmenter le /4 pour que ça dezoom + vite
-    const heightFactor = h > 700 ? 1 : 1 + (700 - h) / 500; // Ajuster /500 pour doser (+ on divise, moins ça zoom)
-
-    return widthFactor * heightFactor;
+  const widthFactor = w > 700 ? 1.1 : 1.1 * (w / 700 + (700 - w) / 4 / 700); // augmenter le /4 pour que ça dezoom + vite
+  const heightFactor = h > 700 ? 1 : 1 + (700 - h) / 500; // Ajuster /500 pour doser (+ on divise, moins ça zoom)
+  return widthFactor * heightFactor;
 }
 
 let scaleFactor = scaleFactorFormula(window.innerWidth, window.innerHeight);
@@ -17,7 +16,7 @@ let scaleFactor = scaleFactorFormula(window.innerWidth, window.innerHeight);
 const aspect = window.innerWidth / (window.innerHeight * 0.75 * scaleFactor);
 const d = 6;
 
-let camera = new THREE.OrthographicCamera(- d * aspect, d * aspect, d, - d, 1, 1000);
+let camera = new THREE.OrthographicCamera(-d * aspect, d * aspect, d, -d, 1, 1000);
 camera.position.set(-10, 10, -10);
 camera.lookAt(new THREE.Vector3(0, 3, 0));
 
@@ -26,7 +25,7 @@ renderer.setSize(window.innerWidth, window.innerHeight * 0.75 * scaleFactor);
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
-const container = document.getElementById('threejsContainer');
+const container = document.getElementById("threejsContainer");
 container.appendChild(renderer.domElement);
 
 const rotating = new THREE.Group();
@@ -99,7 +98,7 @@ const helper = new THREE.CameraHelper(dirLight.shadow.camera);
 // scene.add(whelper);
 
 const orange = 0xffd085;
-const blue = 0x7f89db
+const blue = 0x7f89db;
 
 const ambientLight = new THREE.AmbientLight(orange, 0.8);
 scene.add(ambientLight);
@@ -110,37 +109,39 @@ const loader = new GLTFLoader();
 let leftCurtain, rightCurtain, plant;
 
 function mergeMeshesFromGroup(group) {
-    const geometries = [];
+  const geometries = [];
 
-    group.traverse((child) => {
-        if (child.isMesh && child.geometry) {
-            // IMPORTANT : Appliquer les transformations à la géométrie
-            child.updateWorldMatrix(true, false);
-            const geom = child.geometry.clone();
-            geom.applyMatrix4(child.matrixWorld);
+  group.traverse((child) => {
+    if (child.isMesh && child.geometry) {
+      // IMPORTANT : Appliquer les transformations à la géométrie
+      child.updateWorldMatrix(true, false);
+      const geom = child.geometry.clone();
+      geom.applyMatrix4(child.matrixWorld);
 
-            geometries.push(geom);
-        }
-    });
+      geometries.push(geom);
+    }
+  });
 
-    if (geometries.length === 0) return null;
+  if (geometries.length === 0) return null;
 
-    const mergedGeometry = BufferGeometryUtils.mergeGeometries(geometries, false);
-    const mergedMesh = new THREE.Mesh(mergedGeometry);
-    mergedMesh.name = group.name;
-    return mergedMesh;
+  const mergedGeometry = BufferGeometryUtils.mergeGeometries(geometries, false);
+  const mergedMesh = new THREE.Mesh(mergedGeometry);
+  mergedMesh.name = group.name;
+  return mergedMesh;
 }
 
 function assignMesh(node) {
-    // const merged = mergeMeshesFromGroup(node);
-    node.geometry.computeVertexNormals();
-    node.geometry.attributes.position.originalPosition = node.geometry.attributes.position.array.slice();
-    // console.log(node);
-    return node;
+  // const merged = mergeMeshesFromGroup(node);
+  node.geometry.computeVertexNormals();
+  node.geometry.attributes.position.originalPosition = node.geometry.attributes.position.array.slice();
+  // console.log(node);
+  return node;
 }
 
 let miniRoom;
-loader.load('../static/models/mini_room_2.glb', (gltf) => {
+loader.load(
+  "../static/models/mini_room_2.glb",
+  (gltf) => {
     miniRoom = gltf.scene;
     scene.add(miniRoom);
     rotating.add(miniRoom);
@@ -149,43 +150,45 @@ loader.load('../static/models/mini_room_2.glb', (gltf) => {
     miniRoom.castShadow = true;
     miniRoom.receiveShadow = true;
     miniRoom.traverse(function (node) {
-        if (node.isMesh) {
-            node.castShadow = true;
-            node.receiveShadow = true;
-        }
-        if (node.name == "curtain") leftCurtain = assignMesh(node);
-        else if (node.name == "curtain001") rightCurtain = assignMesh(node);
-        else if (node.name == "monstera") plant = assignMesh(node);
-
+      if (node.isMesh) {
+        node.castShadow = true;
+        node.receiveShadow = true;
+      }
+      if (node.name == "curtain") leftCurtain = assignMesh(node);
+      else if (node.name == "curtain001") rightCurtain = assignMesh(node);
+      else if (node.name == "monstera") plant = assignMesh(node);
     });
-}, undefined, (error) => {
+  },
+  undefined,
+  (error) => {
     console.error(error, "Error on loading of gltf miniRoom");
-});
+  }
+);
 
 let isDrawingCurtains = false;
 
 // switch lights when switching to dark/lightmode
 let isDarkMode = localStorage.getItem("dark-mode") === "true";
 if (isDarkMode) {
-    dirLight.visible = false;
-    counterLight.visible = false;
-    shadowLight.visible = true;
-    wallLight.visible = true;
-    deskLight.visible = true;
-    ambientLight.color.setHex(blue);
-    isDrawingCurtains = true;
+  dirLight.visible = false;
+  counterLight.visible = false;
+  shadowLight.visible = true;
+  wallLight.visible = true;
+  deskLight.visible = true;
+  ambientLight.color.setHex(blue);
+  isDrawingCurtains = true;
 }
 
 const switchMode = document.getElementById("switchMode");
 switchMode.addEventListener("click", () => {
-    isDarkMode = !isDarkMode;
-    dirLight.visible = !dirLight.visible;
-    counterLight.visible = !counterLight.visible;
-    shadowLight.visible = !shadowLight.visible;
-    wallLight.visible = !wallLight.visible;
-    deskLight.visible = !deskLight.visible;
-    ambientLight.color.setHex(isDarkMode ? blue : orange);
-    isDrawingCurtains = true;
+  isDarkMode = !isDarkMode;
+  dirLight.visible = !dirLight.visible;
+  counterLight.visible = !counterLight.visible;
+  shadowLight.visible = !shadowLight.visible;
+  wallLight.visible = !wallLight.visible;
+  deskLight.visible = !deskLight.visible;
+  ambientLight.color.setHex(isDarkMode ? blue : orange);
+  isDrawingCurtains = true;
 });
 
 let isDragging = false;
@@ -193,41 +196,42 @@ let prevMousePosX;
 let velocity = 0;
 let scheduled = false;
 
-window.addEventListener('mousedown', (e) => {
-    isDragging = true;
-    prevMousePosX = e.clientX;
+window.addEventListener("mousedown", (e) => {
+  isDragging = true;
+  prevMousePosX = e.clientX;
 });
 
-window.addEventListener('mouseup', () => isDragging = false);
+window.addEventListener("mouseup", () => (isDragging = false));
 
-window.addEventListener('mousemove', (e) => {
-    if (!isDragging) return;
+window.addEventListener("mousemove", (e) => {
+  if (!isDragging) return;
 
-    if (!scheduled) {
-        scheduled = true;
-        setTimeout(function () {
-            scheduled = false;
-            const deltaX = e.clientX - prevMousePosX;
-            velocity = -deltaX * 0.0015; // vérifier si ça marche sur tous les devices
-        }, 10); // fix la différence de rotation entre souris / trackpad et ordis
-    }
-    prevMousePosX = e.clientX;
+  if (!scheduled) {
+    scheduled = true;
+    setTimeout(function () {
+      scheduled = false;
+      const deltaX = e.clientX - prevMousePosX;
+      velocity = -deltaX * 0.0015; // vérifier si ça marche sur tous les devices
+    }, 10); // fix la différence de rotation entre souris / trackpad et ordis
+  }
+  prevMousePosX = e.clientX;
 });
 
-window.addEventListener('resize', () => {
-    const w = window.innerWidth;
-    const h = window.innerHeight;
-    scaleFactor = scaleFactorFormula(w, h);
+window.addEventListener("resize", () => {
+  console.log(window.innerWidth, window.innerHeight);
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+  scaleFactor = scaleFactorFormula(w, h);
 
-    const a = w / (h * 0.75 * scaleFactor);
-    camera.left = -d * a;
-    camera.right = d * a;
-    camera.top = d;
-    camera.bottom = -d;
-    camera.updateProjectionMatrix();
+  const a = w / (h * 0.75 * scaleFactor);
+  camera.left = -d * a;
+  camera.right = d * a;
+  camera.top = d;
+  camera.bottom = -d;
+  camera.updateProjectionMatrix();
 
-    renderer.setSize(w, h * 0.75 * scaleFactor);
-    renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(w, h * 0.75 * scaleFactor);
+  renderer.setPixelRatio(window.devicePixelRatio);
 });
 
 const clock = new THREE.Clock();
@@ -236,135 +240,135 @@ let distCurtain = 0;
 let maxCurtain = 3;
 
 function drawCurtains() {
-    if (leftCurtain && rightCurtain) {
-        [leftCurtain, rightCurtain].forEach((curtain) => {
-            const way = isDarkMode ? 1 : -1;
-            const positionAttr = curtain.geometry.attributes.position;
-            const original = positionAttr.originalPosition;
+  if (leftCurtain && rightCurtain) {
+    [leftCurtain, rightCurtain].forEach((curtain) => {
+      const way = isDarkMode ? 1 : -1;
+      const positionAttr = curtain.geometry.attributes.position;
+      const original = positionAttr.originalPosition;
 
-            if (!curtain.geometry.boundingBox)
-                curtain.geometry.computeBoundingBox();
+      if (!curtain.geometry.boundingBox) curtain.geometry.computeBoundingBox();
 
-            const speed = 0.01;
-            const bounds = curtain.geometry.boundingBox;
-            const minZ = bounds.min.z, maxZ = bounds.max.z;
-            const rangeZ = maxZ - minZ;
+      const speed = 0.01;
+      const bounds = curtain.geometry.boundingBox;
+      const minZ = bounds.min.z,
+        maxZ = bounds.max.z;
+      const rangeZ = maxZ - minZ;
 
-            for (let i = 0; i < positionAttr.count; i++) {
-                const z = original[i * 3 + 2];
-                const weightZ = curtain.name == "curtain" ? (z - maxZ) / rangeZ : (z - minZ) / rangeZ;
+      for (let i = 0; i < positionAttr.count; i++) {
+        const z = original[i * 3 + 2];
+        const weightZ = curtain.name == "curtain" ? (z - maxZ) / rangeZ : (z - minZ) / rangeZ;
 
-                let movement = maxCurtain * speed * weightZ * way;
-                positionAttr.array[i * 3 + 2] += movement;
-            }
-            distCurtain += speed * maxCurtain;
+        let movement = maxCurtain * speed * weightZ * way;
+        positionAttr.array[i * 3 + 2] += movement;
+      }
+      distCurtain += speed * maxCurtain;
 
-            if (Math.abs(distCurtain) >= Math.abs(maxCurtain)) {
-                isDrawingCurtains = !isDrawingCurtains;
-                distCurtain = 0;
-            }
-            positionAttr.needsUpdate = true;
-        });
-    }
+      if (Math.abs(distCurtain) >= Math.abs(maxCurtain)) {
+        isDrawingCurtains = !isDrawingCurtains;
+        distCurtain = 0;
+      }
+      positionAttr.needsUpdate = true;
+    });
+  }
 }
 
 function curtainWave(mesh) {
-    if (mesh) {
-        const positionAttr = mesh.geometry.attributes.position;
-        const original = positionAttr.originalPosition;
-        const time = clock.getElapsedTime();
+  if (mesh) {
+    const positionAttr = mesh.geometry.attributes.position;
+    const original = positionAttr.originalPosition;
+    const time = clock.getElapsedTime();
 
-        if (!mesh.geometry.boundingBox)
-            mesh.geometry.computeBoundingBox();
+    if (!mesh.geometry.boundingBox) mesh.geometry.computeBoundingBox();
 
-        const bounds = mesh.geometry.boundingBox;
-        const minX = bounds.min.x, maxX = bounds.max.x, minY = bounds.min.y, maxY = bounds.max.y, minZ = bounds.min.z, maxZ = bounds.max.z;
-        const rangeX = maxX - minX, rangeY = maxY - minY, rangeZ = maxZ - minZ;
+    const bounds = mesh.geometry.boundingBox;
+    const minX = bounds.min.x,
+      maxX = bounds.max.x,
+      minY = bounds.min.y,
+      maxY = bounds.max.y,
+      minZ = bounds.min.z,
+      maxZ = bounds.max.z;
+    const rangeX = maxX - minX,
+      rangeY = maxY - minY,
+      rangeZ = maxZ - minZ;
 
-        for (let i = 0; i < positionAttr.count; i++) {
-            const [x, y, z] = [original[i * 3], original[i * 3 + 1], original[i * 3 + 2]];
+    for (let i = 0; i < positionAttr.count; i++) {
+      const [x, y, z] = [original[i * 3], original[i * 3 + 1], original[i * 3 + 2]];
 
-            const weightY = (y - maxY) / rangeY;
-            const weightZ = mesh.name == "curtain" ? (z - maxZ) / rangeZ : (z - minZ) / rangeZ;
+      const weightY = (y - maxY) / rangeY;
+      const weightZ = mesh.name == "curtain" ? (z - maxZ) / rangeZ : (z - minZ) / rangeZ;
 
-            // ajuster la fréquence et amplitude + poids permet de faire moins d'un côté 
-            const wavelength = 5;
-            const frequency = 1.5;
-            const width = 0.1;
+      // ajuster la fréquence et amplitude + poids permet de faire moins d'un côté
+      const wavelength = 5;
+      const frequency = 1.5;
+      const width = 0.1;
 
-            let wave = Math.sin(z * wavelength + time * frequency);
-            wave = mesh.name == "curtain" ? (wave + 1) / 2 : (wave - 1) / 2;
-            wave *= width * weightY * weightZ;
-            positionAttr.array[i * 3] = x + wave; // onde sur x
-        }
-        positionAttr.needsUpdate = true;
+      let wave = Math.sin(z * wavelength + time * frequency);
+      wave = mesh.name == "curtain" ? (wave + 1) / 2 : (wave - 1) / 2;
+      wave *= width * weightY * weightZ;
+      positionAttr.array[i * 3] = x + wave; // onde sur x
     }
+    positionAttr.needsUpdate = true;
+  }
 }
 
-
 function windEffect(mesh) {
-    if (mesh) {
-        const positionAttr = mesh.geometry.attributes.position;
-        const original = positionAttr.originalPosition;
-        const time = clock.getElapsedTime();
+  if (mesh) {
+    const positionAttr = mesh.geometry.attributes.position;
+    const original = positionAttr.originalPosition;
+    const time = clock.getElapsedTime();
 
-        if (!mesh.geometry.boundingBox)
-            mesh.geometry.computeBoundingBox();
+    if (!mesh.geometry.boundingBox) mesh.geometry.computeBoundingBox();
 
-        const bounds = mesh.geometry.boundingBox;
-        const minX = bounds.min.x, maxX = bounds.max.x, minY = bounds.min.y, maxY = bounds.max.y, minZ = bounds.min.z, maxZ = bounds.max.z;
-        const rangeX = maxX - minX, rangeY = maxY - minY, rangeZ = maxZ - minZ;
+    const bounds = mesh.geometry.boundingBox;
+    const minX = bounds.min.x,
+      maxX = bounds.max.x,
+      minY = bounds.min.y,
+      maxY = bounds.max.y,
+      minZ = bounds.min.z,
+      maxZ = bounds.max.z;
+    const rangeX = maxX - minX,
+      rangeY = maxY - minY,
+      rangeZ = maxZ - minZ;
 
+    for (let i = 0; i < positionAttr.count; i++) {
+      const [x, y, z] = [original[i * 3], original[i * 3 + 1], original[i * 3 + 2]];
+      const [weightX, weightY, weightZ] = [(x - minX) / rangeX, (y - minY) / rangeY, (z - minZ) / rangeZ];
 
-        for (let i = 0; i < positionAttr.count; i++) {
+      const xProgress = (x - minX) / rangeX;
+      const delay = xProgress * 1.2;
+      const delayedPhase = y * 2 + (time - delay) * 2;
+      const phase = y * 2 + time * 2;
 
-            const [x, y, z] = [original[i * 3], original[i * 3 + 1], original[i * 3 + 2]];
-            const [weightX, weightY, weightZ] = [(x - minX) / rangeX, (y - minY) / rangeY, (z - minZ) / rangeZ];
+      const dx = x - (minX + rangeX / 2);
+      const dz = z - (minZ + rangeZ / 2);
+      const distXZ = Math.sqrt(dx * dx + dz * dz); // distance du centre
+      const maxDist = Math.sqrt((rangeX / 2) ** 2 + (rangeZ / 2) ** 2);
+      const edgeWeight = Math.pow(distXZ / maxDist, 6); // exponentiel pour que ce soit l'effet que au bout
 
-            const xProgress = (x - minX) / rangeX;
-            const delay = xProgress * 1.2;
-            const delayedPhase = y * 2 + (time - delay) * 2;
-            const phase = y * 2 + time * 2;
+      let waveX = (Math.sin(phase) * 0.02 + Math.sin(phase * 0.5 + 5) * 0.015) * weightY * 0.8;
 
-            const dx = x - (minX + rangeX / 2);
-            const dz = z - (minZ + rangeZ / 2);
-            const distXZ = Math.sqrt(dx * dx + dz * dz); // distance du centre
-            const maxDist = Math.sqrt((rangeX / 2) ** 2 + (rangeZ / 2) ** 2);
-            const edgeWeight = Math.pow(distXZ / maxDist, 6); // exponentiel pour que ce soit l'effet que au bout
+      let waveY = (Math.sin(delayedPhase) * 0.02 + Math.sin(delayedPhase * 0.5 + 5) * 0.015) * edgeWeight * 2.5;
 
-            let waveX = (
-                Math.sin(phase) * 0.02 +
-                Math.sin(phase * 0.5 + 5) * 0.015
-            ) * weightY * 0.8;
+      let waveZ = (Math.sin(phase) * 0.015 + Math.sin(phase * 0.5 + 5) * 0.02) * weightY;
 
-            let waveY = (
-                Math.sin(delayedPhase) * 0.02 +
-                Math.sin(delayedPhase * 0.5 + 5) * 0.015
-            ) * edgeWeight * 2.5;
-
-            let waveZ = (
-                Math.sin(phase) * 0.015 +
-                Math.sin(phase * 0.5 + 5) * 0.02
-            ) * weightY;
-
-            positionAttr.array[i * 3] = x - waveX; // onde sur x
-            positionAttr.array[i * 3 + 1] = y + waveY;
-            positionAttr.array[i * 3 + 2] = z - waveZ * 0.8;
-        }
-        positionAttr.needsUpdate = true;
+      positionAttr.array[i * 3] = x - waveX; // onde sur x
+      positionAttr.array[i * 3 + 1] = y + waveY;
+      positionAttr.array[i * 3 + 2] = z - waveZ * 0.8;
     }
+    positionAttr.needsUpdate = true;
+  }
 }
 
 function animate() {
-    if (isDrawingCurtains) drawCurtains();
-    curtainWave(leftCurtain);
-    curtainWave(rightCurtain);
-    windEffect(plant);
+  if (isDrawingCurtains) drawCurtains();
+  curtainWave(leftCurtain);
+  curtainWave(rightCurtain);
+  windEffect(plant);
 
-    requestAnimationFrame(animate);
-    rotating.rotation.y += velocity;
-    velocity *= 0.95;
-    renderer.render(scene, camera);
+  requestAnimationFrame(animate);
+  rotating.rotation.y += velocity;
+  velocity *= 0.95;
+  renderer.render(scene, camera);
 }
 
 animate();

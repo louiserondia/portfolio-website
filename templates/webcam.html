@@ -3,7 +3,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <style>
+        @font-face {
+            font-family: 'Lora';
+            src: url("{% static 'fonts/Lora-Regular.ttf' %}") format('truetype');
+        }
+        @font-face {
+            font-family: 'Inter';
+            src: url("{% static 'fonts/Inter_18pt-Regular.ttf' %}") format('truetype');
+            font-weight: 400;
+            font-style: normal;
+        }
+        @font-face {
+            font-family: 'Inter';
+            src: url("{% static 'fonts/Inter_18pt-Medium.ttf' %}") format('truetype');
+            font-weight: 500;
+            font-style: normal;
+        }
+        </style>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token }}">
     <title>Webcam</title>
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
@@ -19,8 +38,24 @@
         </button>
     </div>
 
-    <div id="webcamContainer">
-        <img src="{% static 'img/webcam/1.jpg' %}">
+    <div id="mainContent">
+
+        <h2>Bienvenue sur mon blog !!</h2>
+        <div id="webcamContainer">
+            <img src="{% static 'img/webcam/1.jpg' %}">
+        </div>
+        <div class="paragraphe">
+            <p>Je m'appelle Louise Rondia, je suis nee le 18 aout 2000 a 23h21.</p>
+            <p>J'ai deux soeurs, Elise et Marie, ma mere s'appelle Bibiane et mon pere Jean-Francois.</p>
+            <p>On a deux chiens, Dorado Archaeopterix et Vahine, et un chat, Copain.</p>
+            <p>Je suis diplomee d'ecole de photo et j'aime faire toutes sortes de projets funs et creatifs. 
+                Le but du site est de vous montrer des trucs que j'ai fait, comme ce site par exemple.</p>
+            <p>Je code aussi, j'ai fait l'ecole 19 (du reseau 42), et maintenant (si le site est a jour), 
+                j'etudie le developpement de jeux videos a Howest, Digital Arts and Entertainments</p>
+            <p>je fais surtout du C, C++, python, JS, et d'autres trucs en fonction des projets (elixir, rust, et peut-etre d'autres je sais plus)</p>
+            <p>Voici mon <a target="_blank" href="https://github.com/louiserondia">Github</a> pour les nerds qui sont interesse.e.s.</p>
+            <p>Et sur la photo c'est moi (logique) :p</p>
+    </div>
     </div>
 
     <script> let homeUrl = "{% url 'home' %}"; </script>

@@ -1,5 +1,6 @@
-let imagesData;
-let imageList;
+let imagesData; // data from backend as map
+let imageList; // la liste d image qu'on va afficher mais array (melange)
+let backupImageList; // utilisee quand on utilise un tag pour revenir a l etat precedent
 let currentBatch = 1;
 let prevBatch;
 let numberOfImagesToLoad;
@@ -7,8 +8,9 @@ let lastColumn = 0;
 let prevLastColumn;
 let hasShuffled = false;
 const batchSize = 30;
-let loadedImages = new Set(); // used to resize and keep what we loaded from scrolling 
+let loadedImages = new Set(); // used to resize and keep what we loaded from scrolling
 let noImagesFromTags = false; // if no image fits tag selection, this variable is true
+let prevNumTags = 0;
 
 export let edit = false;
 import { checkedTags, editCheckedTags } from "./tags.js";
@@ -44,15 +46,11 @@ async function init() {
   if (!listFromLocalStorage) {
     imageList = shuffle(Object.keys(imagesData));
     localStorage.setItem("imageList", JSON.stringify(imageList));
-  }
-  else
-    imageList = JSON.parse(listFromLocalStorage);
+  } else imageList = JSON.parse(listFromLocalStorage);
   if (imageList && imageList.length) {
     updateColumns(imageList);
     setupInfiniteScroll();
-  }
-  else
-    console.error("Erreur: Aucun image disponible");
+  } else console.error("Erreur: Aucun image disponible");
 }
 
 // ---------------------------
@@ -74,7 +72,7 @@ function resetColumns() {
 // Create images' boxes and their title and tags, which appear when clicked on
 function createImg(image, box) {
   const img = document.createElement("img");
-  img.src = '../static/img/photos/' + image;
+  img.src = "../static/img/photos/" + image;
   img.id = `${image}`;
   img.onclick = () => lightBoxOn(img);
   box.appendChild(img);
@@ -84,7 +82,6 @@ function createImg(image, box) {
     });
   });
 }
-
 
 // -------------------------
 //   INIT / CREATE COLUMNS
@@ -119,10 +116,10 @@ function initializeColumns(images) {
     imageContainer.appendChild(column);
   }
 
-  if (loadedImages.size) // to resize we keep the images loaded before
+  if (loadedImages.size)
+    // to resize we keep the images loaded before
     createColumns(loadedImages);
-  else
-    createColumns(images.slice(0, batchSize)); // faire attention si j'envoie pas un array
+  else createColumns(images.slice(0, batchSize)); // faire attention si j'envoie pas un array
 }
 
 // -------------------------
@@ -137,6 +134,7 @@ function getNumberOfColumns() {
 }
 
 function updateColumns(images) {
+  // devrait pas s appeler update, parce que c que au debut
   lastColumn = 0;
   initializeColumns(images);
   hasShuffled = false;
@@ -170,10 +168,10 @@ function setupInfiniteScroll() {
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting && imageList.length != loadedImages.size) {
-        const logo = document.getElementById("loadingLogo");
-        logo.style.display = "block";
-        if (!numberOfImagesToLoad && !noImagesFromTags)
-          loadNextBatch();
+        // decommenter ici pour afficher l image tag life de chargement
+        // const logo = document.getElementById("loadingLogo");
+        // logo.style.display = "block";
+        if (!numberOfImagesToLoad && !noImagesFromTags)  loadNextBatch();
       }
     });
   });
@@ -189,7 +187,8 @@ function setupInfiniteScroll() {
 export function updateImagesAndUrl() {
   const clientUrl = new URL("/images/", window.location.origin);
   const url = new URL("/api/images/", window.location.origin);
-  
+  const numTags = checkedTags.size;
+
   for (const tag of checkedTags) {
     if (tag.length === 0) continue;
     url.searchParams.append("tag", tag);
@@ -202,13 +201,17 @@ export function updateImagesAndUrl() {
     .then((data) => {
       loadedImages.clear();
       resetColumns();
-      if (!checkedTags.size) {
-        updateColumns(imageList);
+      if (numTags) {
+        if (!prevNumTags) {
+          backupImageList = imageList; // au premier tag actif, on sauve la version sans tags
+        }
+        imageList = shuffle(data.images);
+      } else {
+        imageList = backupImageList; // restaure la version de base (melangee)  
       }
-      else {
-        noImagesFromTags = !data.images.length ? true : false;
-        updateColumns(data.images);
-      }
+      noImagesFromTags = !imageList.length;
+      prevNumTags = numTags;
+      updateColumns(imageList); 
     })
     .catch((error) => {
       console.error("error dans updateImagesAndUrl : " + error);
@@ -240,8 +243,7 @@ document.addEventListener("DOMContentLoaded", () => {
           }, 10);
         }
       });
-    }
-    else {
+    } else {
       tags.forEach((tag) => {
         tag.classList.remove("active");
       });
@@ -259,7 +261,7 @@ document.addEventListener("DOMContentLoaded", () => {
   shuffleButton.addEventListener("click", () => {
     hasShuffled = true;
     loadedImages.clear();
-    imageList = shuffle(Object.keys(imagesData));
+    imageList = shuffle(imageList);
     localStorage.setItem("imageList", JSON.stringify(imageList));
     resetColumns();
     updateColumns(imageList);

@@ -1,10 +1,19 @@
-#webcamContainer {
-  justify-items: center;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+#mainContent {
+  font-family: Lora;
+  display: flex;
+  flex-direction: column;
+  margin: 0 2rem;
+  gap: 1.5rem;
 }
-#webcamContainer img {
-  max-width: 75vw;
+#mainContent #webcamContainer img {
+  max-height: 50vh;
+}
+#mainContent p {
+  padding: 0;
+  margin: 0;
+}
+#mainContent a, #mainContent a:visited, #mainContent a:hover, #mainContent a:active {
+  color: black;
+  text-decoration: none;
+  font-weight: bold;
 }/*# sourceMappingURL=webcam.css.map */

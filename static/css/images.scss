@@ -1,6 +1,10 @@
 $dark-color: #080126;
 $light-color: #e5e3ee;
 
+html, body{
+    min-width: 50px;
+}
+
 #tagsAndImages {
     display: flex;
     flex-direction: column;

@@ -1,31 +1,56 @@
 {
     "0000.jpg": [
-        "n&b"
+        "n&b",
+        "personnes",
+        "main"
     ],
     "0001.jpg": [
-        "n&b"
+        "n&b",
+        "pierre"
     ],
     "0002.jpg": [
-        "personnes"
-    ],
-    "0003.jpg": [],
-    "0004.jpg": [],
-    "0005.jpg": [],
-    "0006.jpg": [],
-    "0007.jpg": [],
-    "0008.jpg": [
-        "personnes"
-    ],
-    "0009.jpg": [],
-    "0010.jpg": [
+        "personnes",
         "couleur"
     ],
-    "0011.jpg": [],
+    "0003.jpg": [
+        "plantes",
+        "couleur"
+    ],
+    "0004.jpg": [
+        "couleur"
+    ],
+    "0005.jpg": [
+        "couleur"
+    ],
+    "0006.jpg": [
+        "couleur",
+        "main"
+    ],
+    "0007.jpg": [
+        "couleur"
+    ],
+    "0008.jpg": [
+        "personnes",
+        "plantes",
+        "couleur"
+    ],
+    "0009.jpg": [
+        "couleur"
+    ],
+    "0010.jpg": [
+        "couleur",
+        "plantes"
+    ],
+    "0011.jpg": [
+        "couleur"
+    ],
     "0012.jpg": [
-        "personnes"
+        "personnes",
+        "couleur"
     ],
     "0013.jpg": [
-        "couleur"
+        "couleur",
+        "pierre"
     ],
     "0014.jpg": [
         "n&b"
@@ -33,19 +58,31 @@
     "0015.jpg": [
         "n&b"
     ],
-    "0016.jpg": [],
-    "0017.jpg": [
+    "0016.jpg": [
         "couleur"
     ],
-    "0018.jpg": [],
-    "0019.jpg": [],
+    "0017.jpg": [
+        "couleur",
+        "plantes"
+    ],
+    "0018.jpg": [
+        "couleur"
+    ],
+    "0019.jpg": [
+        "plantes",
+        "couleur"
+    ],
     "0020.jpg": [
-        "n&b"
+        "n&b",
+        "plantes"
     ],
     "0021.jpg": [
         "n&b"
     ],
-    "0022.jpg": [],
+    "0022.jpg": [
+        "personnes",
+        "couleur"
+    ],
     "0023.jpg": [
         "nature",
         "n&b"
@@ -53,7 +90,10 @@
     "0024.jpg": [
         "couleur"
     ],
-    "0025.jpg": [],
+    "0025.jpg": [
+        "plantes",
+        "couleur"
+    ],
     "0026.jpg": [
         "couleur"
     ],
@@ -61,121 +101,205 @@
         "personnes",
         "couleur"
     ],
-    "0028.jpg": [],
-    "0029.jpg": [],
+    "0028.jpg": [
+        "plantes",
+        "couleur"
+    ],
+    "0029.jpg": [
+        "couleur"
+    ],
     "0030.jpg": [
         "personnes",
         "couleur"
     ],
-    "0031.jpg": [],
+    "0031.jpg": [
+        "couleur"
+    ],
     "0032.jpg": [
-        "personnes"
+        "personnes",
+        "couleur"
     ],
     "0033.jpg": [
         "personnes",
         "couleur"
     ],
     "0034.jpg": [
-        "personnes"
+        "personnes",
+        "couleur"
     ],
     "0035.jpg": [
+        "couleur",
+        "plantes"
+    ],
+    "0036.jpg": [
         "couleur"
     ],
-    "0036.jpg": [],
     "0037.jpg": [
         "nature",
-        "couleur"
+        "couleur",
+        "main"
     ],
     "0038.jpg": [
-        "n&b"
+        "n&b",
+        "pierre"
     ],
     "0039.jpg": [
         "couleur"
     ],
     "0040.jpg": [
-        "couleur"
+        "couleur",
+        "personnes"
     ],
     "0041.jpg": [
-        "nature"
-    ],
-    "0042.jpg": [
+        "nature",
+        "plantes",
         "couleur"
     ],
-    "0043.jpg": [],
+    "0042.jpg": [
+        "couleur",
+        "plantes"
+    ],
+    "0043.jpg": [
+        "plantes",
+        "couleur"
+    ],
     "0044.jpg": [
-        "personnes"
+        "personnes",
+        "couleur"
     ],
     "0045.jpg": [
         "paysage",
+        "couleur",
+        "plantes"
+    ],
+    "0046.jpg": [
+        "plantes",
         "couleur"
     ],
-    "0046.jpg": [],
-    "0047.jpg": [],
+    "0047.jpg": [
+        "couleur"
+    ],
     "0048.jpg": [
         "couleur"
     ],
-    "0049.jpg": [],
-    "0050.jpg": [],
-    "0051.jpg": [],
+    "0049.jpg": [
+        "couleur"
+    ],
+    "0050.jpg": [
+        "couleur"
+    ],
+    "0051.jpg": [
+        "couleur"
+    ],
     "0052.jpg": [
         "couleur"
     ],
     "0053.jpg": [
         "paysage",
+        "couleur",
+        "plantes"
+    ],
+    "0054.jpg": [
+        "pierre",
         "couleur"
     ],
-    "0054.jpg": [],
     "0055.jpg": [
-        "personnes"
+        "personnes",
+        "couleur"
     ],
     "0056.jpg": [
-        "n&b"
+        "n&b",
+        "pierre"
     ],
-    "0057.jpg": [],
-    "0058.jpg": [],
-    "0059.jpg": [],
-    "0060.jpg": [
+    "0057.jpg": [
+        "plantes",
         "couleur"
     ],
-    "0061.jpg": [],
-    "0062.jpg": [
-        "n&b"
+    "0058.jpg": [
+        "couleur"
     ],
-    "0063.jpg": [],
-    "0064.jpg": [],
-    "0065.jpg": [],
+    "0059.jpg": [
+        "couleur"
+    ],
+    "0060.jpg": [
+        "couleur",
+        "main"
+    ],
+    "0061.jpg": [
+        "plantes",
+        "couleur"
+    ],
+    "0062.jpg": [
+        "n&b",
+        "pierre"
+    ],
+    "0063.jpg": [
+        "couleur"
+    ],
+    "0064.jpg": [
+        "plantes",
+        "couleur"
+    ],
+    "0065.jpg": [
+        "pierre",
+        "couleur"
+    ],
     "0066.jpg": [
         "paysage",
-        "nature"
-    ],
-    "0067.jpg": [
+        "nature",
+        "plantes",
         "couleur"
     ],
-    "0068.jpg": [],
+    "0067.jpg": [
+        "couleur",
+        "personnes"
+    ],
+    "0068.jpg": [
+        "couleur"
+    ],
     "0069.jpg": [
         "n&b",
         "pierre"
     ],
     "0070.jpg": [
-        "couleur"
+        "couleur",
+        "plantes"
     ],
     "0071.jpg": [
-        "paysage"
+        "paysage",
+        "couleur"
     ],
-    "0072.jpg": [],
+    "0072.jpg": [
+        "couleur"
+    ],
     "0073.jpg": [
         "paysage",
         "n&b"
     ],
-    "0074.jpg": [],
-    "0075.jpg": [],
-    "0076.jpg": [],
-    "0077.jpg": [
-        "paysage"
+    "0074.jpg": [
+        "plantes",
+        "couleur"
     ],
-    "0078.jpg": [],
-    "0079.jpg": [],
-    "0080.jpg": [],
+    "0075.jpg": [
+        "couleur"
+    ],
+    "0076.jpg": [
+        "plantes",
+        "couleur"
+    ],
+    "0077.jpg": [
+        "paysage",
+        "couleur"
+    ],
+    "0078.jpg": [
+        "couleur"
+    ],
+    "0079.jpg": [
+        "couleur"
+    ],
+    "0080.jpg": [
+        "couleur"
+    ],
     "0081.jpg": [
         "paysage",
         "couleur"
@@ -184,67 +308,128 @@
         "couleur"
     ],
     "0083.jpg": [
-        "couleur"
+        "couleur",
+        "personnes"
     ],
     "0084.jpg": [
-        "nature"
+        "nature",
+        "plantes",
+        "couleur"
     ],
     "0085.jpg": [
         "couleur"
     ],
     "0086.jpg": [
-        "paysage"
-    ],
-    "0087.jpg": [],
-    "0088.jpg": [],
-    "0089.jpg": [],
-    "0090.jpg": [
-        "paysage"
-    ],
-    "0091.jpg": [],
-    "0092.jpg": [],
-    "0093.jpg": [
+        "paysage",
         "couleur"
     ],
-    "0094.jpg": [],
-    "0095.jpg": [],
+    "0087.jpg": [
+        "couleur"
+    ],
+    "0088.jpg": [
+        "couleur"
+    ],
+    "0089.jpg": [
+        "personnes",
+        "couleur"
+    ],
+    "0090.jpg": [
+        "paysage",
+        "couleur"
+    ],
+    "0091.jpg": [
+        "couleur"
+    ],
+    "0092.jpg": [
+        "couleur"
+    ],
+    "0093.jpg": [
+        "couleur",
+        "pierre",
+        "plantes"
+    ],
+    "0094.jpg": [
+        "couleur"
+    ],
+    "0095.jpg": [
+        "couleur"
+    ],
     "0096.jpg": [
-        "paysage"
+        "paysage",
+        "plantes",
+        "couleur"
     ],
     "0097.jpg": [
         "n&b"
     ],
-    "0098.jpg": [],
-    "0099.jpg": [],
-    "0100.jpg": [],
+    "0098.jpg": [
+        "plantes",
+        "couleur"
+    ],
+    "0099.jpg": [
+        "pierre",
+        "couleur"
+    ],
+    "0100.jpg": [
+        "personnes",
+        "couleur"
+    ],
     "0101.jpg": [
         "couleur"
     ],
-    "0102.jpg": [],
-    "0103.jpg": [],
-    "0104.jpg": [],
-    "0105.jpg": [],
-    "0106.jpg": [
-        "valentin"
-    ],
-    "0107.jpg": [],
-    "0108.jpg": [
-        "n&b"
-    ],
-    "0109.jpg": [],
-    "0110.jpg": [
+    "0102.jpg": [
+        "pierre",
         "couleur"
+    ],
+    "0103.jpg": [
+        "couleur"
+    ],
+    "0104.jpg": [
+        "couleur"
+    ],
+    "0105.jpg": [
+        "plantes",
+        "couleur"
+    ],
+    "0106.jpg": [
+        "valentin",
+        "personnes",
+        "couleur"
+    ],
+    "0107.jpg": [
+        "couleur"
+    ],
+    "0108.jpg": [
+        "n&b",
+        "plantes"
+    ],
+    "0109.jpg": [
+        "plantes",
+        "couleur"
+    ],
+    "0110.jpg": [
+        "couleur",
+        "plantes"
     ],
     "0111.jpg": [
-        "couleur"
+        "couleur",
+        "pierre"
     ],
     "0112.jpg": [
         "nature",
         "n&b"
     ],
-    "0113.jpg": [],
-    "0114.jpg": [],
-    "0115.jpg": [],
+    "0113.jpg": [
+        "couleur"
+    ],
+    "0114.jpg": [
+        "plantes",
+        "couleur"
+    ],
+    "0115.jpg": [
+        "plantes",
+        "couleur"
+    ],
     "0116.jpg": [
         "couleur"
     ],
@@ -253,36 +438,71 @@
         "personnes",
         "n&b"
     ],
-    "0118.jpg": [],
-    "0119.jpg": [],
-    "0120.jpg": [],
-    "0121.jpg": [],
-    "0122.jpg": [
-        "n&b"
+    "0118.jpg": [
+        "couleur"
     ],
-    "0123.jpg": [],
-    "0124.jpg": [],
-    "0125.jpg": [],
-    "0126.jpg": [],
-    "0127.jpg": [],
-    "0128.jpg": [],
+    "0119.jpg": [
+        "couleur"
+    ],
+    "0120.jpg": [
+        "couleur"
+    ],
+    "0121.jpg": [
+        "couleur"
+    ],
+    "0122.jpg": [
+        "n&b",
+        "pierre"
+    ],
+    "0123.jpg": [
+        "plantes",
+        "couleur"
+    ],
+    "0124.jpg": [
+        "plantes",
+        "couleur"
+    ],
+    "0125.jpg": [
+        "couleur"
+    ],
+    "0126.jpg": [
+        "pierre",
+        "couleur"
+    ],
+    "0127.jpg": [
+        "couleur"
+    ],
+    "0128.jpg": [
+        "plantes",
+        "couleur"
+    ],
     "0129.jpg": [
         "couleur"
     ],
     "0130.jpg": [
         "valentin",
-        "n&b"
-    ],
-    "0131.jpg": [],
-    "0132.jpg": [],
-    "0133.jpg": [
+        "n&b",
         "personnes"
     ],
-    "0134.jpg": [
+    "0131.jpg": [
         "couleur"
     ],
-    "0135.jpg": [
+    "0132.jpg": [
+        "pierre",
+        "plantes",
         "couleur"
+    ],
+    "0133.jpg": [
+        "personnes",
+        "couleur"
+    ],
+    "0134.jpg": [
+        "couleur",
+        "plantes"
+    ],
+    "0135.jpg": [
+        "couleur",
+        "plantes"
     ],
     "0136.jpg": [
         "n&b"
@@ -293,8 +513,12 @@
     "0138.jpg": [
         "n&b"
     ],
-    "0139.jpg": [],
-    "0140.jpg": [],
+    "0139.jpg": [
+        "couleur"
+    ],
+    "0140.jpg": [
+        "couleur"
+    ],
     "0141.jpg": [
         "n&b"
     ],
@@ -312,52 +536,85 @@
         "n&b"
     ],
     "0147.jpg": [
+        "couleur",
+        "plantes"
+    ],
+    "0148.jpg": [
+        "plantes",
         "couleur"
     ],
-    "0148.jpg": [],
-    "0149.jpg": [],
+    "0149.jpg": [
+        "pierre",
+        "couleur"
+    ],
     "0150.jpg": [
         "couleur"
     ],
-    "0151.jpg": [],
-    "0152.jpg": [],
+    "0151.jpg": [
+        "plantes",
+        "couleur"
+    ],
+    "0152.jpg": [
+        "plantes",
+        "couleur"
+    ],
     "0153.jpg": [
         "n&b"
     ],
     "0154.jpg": [
-        "n&b"
+        "n&b",
+        "main"
     ],
     "0155.jpg": [
-        "n&b"
+        "n&b",
+        "plantes"
     ],
     "0156.jpg": [
-        "n&b"
+        "n&b",
+        "plantes"
     ],
     "0157.jpg": [
         "n&b",
         "pierre"
     ],
     "0158.jpg": [
-        "n&b"
+        "n&b",
+        "pierre"
     ],
     "0159.jpg": [
-        "n&b"
+        "n&b",
+        "plantes"
     ],
     "0160.jpg": [
-        "n&b"
+        "n&b",
+        "pierre"
     ],
     "0161.jpg": [
-        "n&b"
+        "n&b",
+        "pierre"
     ],
-    "0162.jpg": [],
-    "0163.jpg": [],
-    "0164.jpg": [],
-    "0165.jpg": [
+    "0162.jpg": [
         "couleur"
     ],
-    "0166.jpg": [],
+    "0163.jpg": [
+        "plantes",
+        "couleur"
+    ],
+    "0164.jpg": [
+        "plantes",
+        "couleur"
+    ],
+    "0165.jpg": [
+        "couleur",
+        "plantes"
+    ],
+    "0166.jpg": [
+        "plantes",
+        "couleur"
+    ],
     "0167.jpg": [
-        "n&b"
+        "n&b",
+        "plantes"
     ],
     "0168.jpg": [
         "n&b"
@@ -369,84 +626,144 @@
         "n&b"
     ],
     "0171.jpg": [
-        "n&b"
+        "n&b",
+        "plantes"
     ],
     "0172.jpg": [
         "paysage",
-        "couleur"
+        "couleur",
+        "plantes"
     ],
     "0173.jpg": [
         "couleur"
     ],
     "0174.jpg": [],
-    "0175.jpg": [],
+    "0175.jpg": [
+        "couleur"
+    ],
     "0176.jpg": [
         "nature",
         "couleur"
     ],
-    "0177.jpg": [],
-    "0178.jpg": [],
-    "0179.jpg": [],
-    "0180.jpg": [
+    "0177.jpg": [
+        "personnes",
         "couleur"
+    ],
+    "0178.jpg": [
+        "couleur"
+    ],
+    "0179.jpg": [
+        "couleur"
+    ],
+    "0180.jpg": [
+        "couleur",
+        "plantes"
     ],
     "0181.jpg": [
         "couleur"
     ],
-    "0182.jpg": [],
-    "0183.jpg": [
-        "nature"
+    "0182.jpg": [
+        "personnes",
+        "couleur"
     ],
-    "0184.jpg": [],
-    "0185.jpg": [],
-    "0186.jpg": [],
+    "0183.jpg": [
+        "nature",
+        "pierre",
+        "couleur"
+    ],
+    "0184.jpg": [
+        "nature",
+        "couleur"
+    ],
+    "0185.jpg": [
+        "couleur"
+    ],
+    "0186.jpg": [
+        "couleur"
+    ],
     "0187.jpg": [
         "n&b"
     ],
     "0188.jpg": [
-        "n&b"
+        "n&b",
+        "personnes"
     ],
     "0189.jpg": [
-        "n&b"
+        "n&b",
+        "plantes"
     ],
     "0190.jpg": [
-        "n&b"
+        "n&b",
+        "pierre"
     ],
     "0191.jpg": [
         "couleur"
     ],
     "0192.jpg": [
-        "personnes"
+        "personnes",
+        "couleur"
     ],
-    "0193.jpg": [],
-    "0194.jpg": [],
-    "0195.jpg": [],
-    "0196.jpg": [],
-    "0197.jpg": [],
+    "0193.jpg": [
+        "personnes",
+        "couleur"
+    ],
+    "0194.jpg": [
+        "personnes",
+        "couleur"
+    ],
+    "0195.jpg": [
+        "couleur"
+    ],
+    "0196.jpg": [
+        "couleur"
+    ],
+    "0197.jpg": [
+        "couleur"
+    ],
     "0198.jpg": [
-        "n&b"
+        "n&b",
+        "plantes"
     ],
-    "0199.jpg": [],
-    "0200.jpg": [],
-    "0201.jpg": [],
+    "0199.jpg": [
+        "plantes",
+        "couleur"
+    ],
+    "0200.jpg": [
+        "personnes",
+        "couleur"
+    ],
+    "0201.jpg": [
+        "couleur"
+    ],
     "0202.jpg": [
-        "nature"
+        "nature",
+        "plantes",
+        "couleur"
     ],
-    "0203.jpg": [],
-    "0204.jpg": [],
-    "0205.jpg": [],
+    "0203.jpg": [
+        "couleur"
+    ],
+    "0204.jpg": [
+        "couleur"
+    ],
+    "0205.jpg": [
+        "couleur"
+    ],
     "0206.jpg": [
         "personnes",
         "n&b"
     ],
     "0207.jpg": [
-        "n&b"
+        "n&b",
+        "personnes"
     ],
     "0208.jpg": [
-        "n&b"
+        "n&b",
+        "personnes"
     ],
     "0209.jpg": [
-        "n&b"
+        "n&b",
+        "plantes"
     ],
     "0210.jpg": [
         "n&b"
@@ -462,22 +779,27 @@
         "nature"
     ],
     "0214.jpg": [
-        "n&b"
+        "n&b",
+        "plantes"
     ],
     "0215.jpg": [
-        "n&b"
+        "n&b",
+        "plantes"
     ],
     "0216.jpg": [
-        "n&b"
+        "n&b",
+        "personnes"
     ],
     "0217.jpg": [
         "n&b"
     ],
     "0218.jpg": [
-        "n&b"
+        "n&b",
+        "plantes"
     ],
     "0219.jpg": [
-        "n&b"
+        "n&b",
+        "plantes"
     ],
     "0220.jpg": [
         "n&b"
@@ -489,7 +811,8 @@
         "n&b"
     ],
     "0223.jpg": [
-        "n&b"
+        "n&b",
+        "plantes"
     ],
     "0224.jpg": [
         "n&b"
@@ -500,60 +823,116 @@
     "0226.jpg": [
         "n&b"
     ],
-    "0227.jpg": [],
-    "0228.jpg": [],
-    "0229.jpg": [],
-    "0230.jpg": [],
+    "0227.jpg": [
+        "couleur"
+    ],
+    "0228.jpg": [
+        "couleur"
+    ],
+    "0229.jpg": [
+        "couleur",
+        "main"
+    ],
+    "0230.jpg": [
+        "couleur"
+    ],
     "0231.jpg": [
         "couleur"
     ],
-    "0232.jpg": [],
-    "0233.jpg": [],
-    "0234.jpg": [],
-    "0235.jpg": [],
+    "0232.jpg": [
+        "personnes",
+        "couleur"
+    ],
+    "0233.jpg": [
+        "pierre",
+        "couleur",
+        "main"
+    ],
+    "0234.jpg": [
+        "plantes",
+        "couleur"
+    ],
+    "0235.jpg": [
+        "plantes",
+        "couleur"
+    ],
     "0236.jpg": [
         "couleur"
     ],
     "0237.jpg": [
-        "nature"
+        "nature",
+        "personnes",
+        "couleur"
     ],
     "0238.jpg": [
+        "couleur",
+        "personnes"
+    ],
+    "0239.jpg": [
+        "personnes",
         "couleur"
     ],
-    "0239.jpg": [],
-    "0240.jpg": [],
-    "0241.jpg": [],
-    "0242.jpg": [],
+    "0240.jpg": [
+        "couleur"
+    ],
+    "0241.jpg": [
+        "couleur"
+    ],
+    "0242.jpg": [
+        "personnes",
+        "couleur"
+    ],
     "0243.jpg": [
+        "couleur",
+        "personnes"
+    ],
+    "0244.jpg": [
+        "plantes",
         "couleur"
     ],
-    "0244.jpg": [],
     "0245.jpg": [
         "couleur"
     ],
     "0246.jpg": [
+        "couleur",
+        "plantes"
+    ],
+    "0247.jpg": [
+        "plantes",
+        "couleur",
+        "main"
+    ],
+    "0248.jpg": [
+        "personnes",
         "couleur"
     ],
-    "0247.jpg": [],
-    "0248.jpg": [],
     "0249.jpg": [
         "personnes",
         "couleur"
     ],
-    "0250.jpg": [],
-    "0251.jpg": [],
+    "0250.jpg": [
+        "pierre",
+        "couleur"
+    ],
+    "0251.jpg": [
+        "personnes",
+        "couleur"
+    ],
     "0252.jpg": [
-        "n&b"
+        "n&b",
+        ""
     ],
     "0253.jpg": [
         "paysage",
         "n&b"
     ],
     "0254.jpg": [
-        "n&b"
+        "n&b",
+        "personnes"
     ],
     "0255.jpg": [
-        "n&b"
+        "n&b",
+        "pierre"
     ],
     "0256.jpg": [
         "valentin",
@@ -562,7 +941,8 @@
     ],
     "0257.jpg": [
         "valentin",
-        "n&b"
+        "n&b",
+        "personnes"
     ],
     "0258.jpg": [
         "n&b"
@@ -574,7 +954,8 @@
         "n&b"
     ],
     "0261.jpg": [
-        "n&b"
+        "n&b",
+        "personnes"
     ],
     "0262.jpg": [
         "n&b"
@@ -585,67 +966,92 @@
     "0264.jpg": [
         "n&b"
     ],
-    "0265.jpg": [],
+    "0265.jpg": [
+        "couleur"
+    ],
     "0266.jpg": [
         "n&b",
         "pierre"
     ],
-    "0267.jpg": [],
-    "0268.jpg": [
-        "n&b"
-    ],
-    "0269.jpg": [
-        "n&b"
-    ],
-    "0270.jpg": [
+    "0267.jpg": [
         "couleur"
     ],
-    "0271.jpg": [
-        "n&b"
+    "0268.jpg": [
+        "n&b",
+        "personnes"
     ],
-    "0272.jpg": [],
+    "0269.jpg": [
+        "n&b",
+        "plantes"
+    ],
+    "0270.jpg": [
+        "couleur",
+        "personnes"
+    ],
+    "0271.jpg": [
+        "n&b",
+        "personnes"
+    ],
+    "0272.jpg": [
+        "personnes"
+    ],
     "0273.jpg": [
-        "n&b"
+        "n&b",
+        "personnes"
     ],
     "0274.jpg": [
-        "n&b"
+        "n&b",
+        "personnes"
     ],
     "0275.jpg": [
-        "n&b"
+        "n&b",
+        "personnes"
     ],
     "0276.jpg": [
-        "n&b"
+        "n&b",
+        "personnes"
     ],
     "0277.jpg": [
-        "n&b"
+        "n&b",
+        "personnes"
     ],
     "0278.jpg": [
         "n&b"
     ],
     "0279.jpg": [
-        "n&b"
+        "n&b",
+        "personnes"
     ],
     "0280.jpg": [
-        "n&b"
+        "n&b",
+        "personnes"
     ],
     "0281.jpg": [
         "n&b"
     ],
     "0282.jpg": [
-        "n&b"
+        "n&b",
+        ""
     ],
     "0283.jpg": [
         "couleur"
     ],
-    "0284.jpg": [],
+    "0284.jpg": [
+        "personnes",
+        "couleur"
+    ],
     "0285.jpg": [
         "n&b"
     ],
-    "0286.jpg": [],
+    "0286.jpg": [
+        "couleur"
+    ],
     "0287.jpg": [
         "n&b"
     ],
-    "0288.jpg": [],
+    "0288.jpg": [
+        "couleur"
+    ],
     "0289.jpg": [
         "le village",
         "n&b"
@@ -661,11 +1067,13 @@
         "n&b"
     ],
     "0292.jpg": [
-        "n&b"
+        "n&b",
+        "personnes"
     ],
     "0293.jpg": [
         "le village",
-        "n&b"
+        "n&b",
+        "personnes"
     ],
     "0294.jpg": [
         "le village",
@@ -674,9 +1082,12 @@
     ],
     "0295.jpg": [
         "le village",
-        "n&b"
+        "n&b",
+        "",
+        "personnes"
     ],
     "0296.jpg": [
-        "personnes"
+        "personnes",
+        "couleur"
     ]
 }

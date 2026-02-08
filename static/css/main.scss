@@ -68,6 +68,7 @@ html {
 }
 
 body {
+    min-width: 50px;
 
     background-color: $light-color;
     color: $dark-color;
@@ -82,6 +83,7 @@ body {
     justify-content: center;
     margin: 0;
     padding: 0;
+    min-width: 50px;
 }
 
 button {

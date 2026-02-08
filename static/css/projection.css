@@ -1,3 +1,13 @@
+html, body {
+  overflow: hidden;
+  touch-action: none;
+  min-width: 50px;
+}
+
+#threejsContainer {
+  touch-action: none;
+}
+
 img {
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -36,7 +46,7 @@ img {
   cursor: pointer;
   padding-bottom: 0.2rem;
   line-height: 100%;
-  transform: scaleX(1.5);
+  transform: sleX(1.5);
   user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -128,13 +138,18 @@ img {
   background-color: rgba(30, 20, 160, 0.5);
 }
 
+@media (max-width: 650px) {
+  #topRightButtons {
+    flex-direction: row !important;
+  }
+}
 @media (max-width: 801px) {
   #screenPresentation {
     flex-direction: column !important;
   }
   #screenPresentation #description {
     width: 80%;
-    height: 45%;
+    height: auto;
     max-width: 400px;
     max-height: 225px;
     top: auto;
@@ -186,7 +201,10 @@ img {
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  margin: 4rem;
+  justify-content: space-around;
+  gap: 1rem;
+  flex: 1 1 auto;
+  margin: 1.5rem;
   padding: 1rem;
   overflow-y: auto;
   border-radius: 10px;

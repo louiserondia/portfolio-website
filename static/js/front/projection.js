@@ -2,15 +2,16 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { Raycaster } from "three";
 import { RectAreaLightHelper } from "three/addons/helpers/RectAreaLightHelper.js";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 
 const raycaster = new Raycaster();
 const objects = new Map();
 let objectsArray;
+const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
 function scaleFactorFormula(w, h) {
   const widthFactor = w > 700 ? 1.1 : 1.1 * (w / 700 + (700 - w) / 4 / 700); // augmenter le /4 pour que ça dezoom + vite
   const heightFactor = h > 700 ? 1 : 1 + (700 - h) / 500; // Ajuster /500 pour doser (+ on divise, moins ça zoom)
-
   return widthFactor * heightFactor;
 }
 
@@ -32,14 +33,7 @@ const globalCameraPos = new THREE.Vector3(10, 10, 10);
 const globalCameraLookAt = new THREE.Vector3(0, 3, 0);
 let currentCameraZoom = 0.75;
 
-let camera = new THREE.OrthographicCamera(
-  -d * aspect,
-  d * aspect,
-  d,
-  -d,
-  -10,
-  1000
-);
+let camera = new THREE.OrthographicCamera(-d * aspect, d * aspect, d, -d, -10, 1000);
 camera.position.copy(globalCameraPos);
 camera.lookAt(globalCameraLookAt);
 camera.zoom = currentCameraZoom * scaleFactor;
@@ -49,6 +43,34 @@ const renderer = new THREE.WebGLRenderer({ alpha: true });
 renderer.setSize(w, h);
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
+let controls;
+
+if (isMobile) {
+  controls = new OrbitControls(camera, renderer.domElement);
+
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.08;
+
+  controls.enablePan = false;
+  controls.enableRotate = true;
+  controls.enableZoom = true;
+
+  controls.minPolarAngle = Math.PI / 2.8; // bloque la rotation juste horizontale a 60 deg
+  controls.maxPolarAngle = Math.PI / 2.8;
+
+  controls.minZoom = 0.5;
+  controls.maxZoom = 6;
+
+  controls.touches = {
+    ONE: THREE.TOUCH.ROTATE,
+    TWO: THREE.TOUCH.DOLLY_PAN,
+  };
+  controls.target.copy(globalCameraLookAt);
+
+  // no scroll
+  renderer.domElement.style.touchAction = "none";
+}
 
 const container = document.getElementById("threejsContainer");
 container.appendChild(renderer.domElement);
@@ -153,6 +175,8 @@ loader.load(
     projectionRoom.receiveShadow = true;
     projectionRoom.traverse(function (node) {
       if (node.isMesh) {
+        node.geometry.computeBoundingSphere(); // aide le raycaster
+        node.geometry.computeVertexNormals(); // sécurise les normales
         node.castShadow = true;
         node.receiveShadow = true;
         objects.set(node.name, node);
@@ -166,7 +190,7 @@ loader.load(
   undefined,
   (error) => {
     console.error(error, "Error on loading of gltf projectionRoom");
-  }
+  },
 );
 
 // -----------------------------------
@@ -184,58 +208,86 @@ let calendarCameraLookAt = new THREE.Vector3(-2, 1.75, -12);
 
 let isZooming = false;
 
+
+function SetVideoStyle(video, screenMesh) {
+if (!isMobile) {
+    video.style.height = `${250 * scaleFactor}px`;
+    video.style.width = `auto`;
+    const mid = getScreenMiddle(screenMesh);
+    video.style.transform = `translate(-50%, -50%) translate(${mid.x}px, ${mid.y}px)`;
+    videoControls.style.transform = `translate(-50%, 0) translate(${mid.x}px, 0)`;
+    videoControls.style.top = `${mid.y + video.clientHeight / 2}px`;
+    videoControls.style.width = `${video.clientWidth}px`;
+  }
+  else {
+    document.querySelector("#screenPresentation.active").style.backgroundColor = "rgba(200, 200, 200, 0.7)";
+    video.style.width = `95vw`;
+    video.style.height = `auto`;
+    video.style.left = `50%`;
+    video.style.top = `45%`;
+    video.style.transform = `translate(-50%, -50%)`;
+    videoControls.style.top = `${video.clientHeight + video.getBoundingClientRect().top}px`;
+    videoControls.style.left = `50%`;
+    videoControls.style.transform = `translate(-50%, 0%)`;
+    videoControls.style.width = `${video.clientWidth}px`;
+  }
+}
+
+function DisplayObjectInfoAfterZoom(name) {
+  
+  if (name == "record") hits.classList.add("active");
+  else if (name == "books") books.classList.add("active");
+  else if (name == "calendar") calendar.classList.add("active");
+  else if (name == "screen") {
+    screenPresBox.classList.add("active");
+    SetVideoStyle(video, screenMesh);
+  } 
+  else if (name == "dezoom") {
+    video.pause();
+    document.querySelectorAll("audio").forEach((audio) => {
+      audio.pause();
+      changePlayButton(audio, audio.parentElement.querySelector(".play-audio"));
+    });
+    changePlayButton(video, playVideo);
+  }
+}
+
 function zoomOn(pos, lookAt, zoom, name) {
   function easeInOutSine(x) {
     return -(Math.cos(Math.PI * x) - 1) / 2;
   }
 
-  if (name == "dezoom")
-    [hits, books, calendar, screenPresBox].forEach((e) =>
-      e.classList.remove("active")
-    );
+  if (name == "dezoom") [hits, books, calendar, screenPresBox].forEach((e) => e.classList.remove("active"));
 
   const startTime = performance.now();
-  const duration = name == "calendar" ? 1250 : 1000;
   const r = rotating.rotation.y;
+  let duration = 1000;
+  if (name == calendar) duration = 1250;
 
   function animateZoom() {
+    if (isMobile) {
+      DisplayObjectInfoAfterZoom(name);
+      isZooming = false;
+      return;
+    }
+
     const elapsed = performance.now() - startTime;
     let t = Math.min(elapsed / duration, 1);
     if (name == "dezoom") t = 1 - t;
     const easedT = easeInOutSine(t);
 
     camera.position.lerpVectors(pos[0], pos[1], easedT);
-    camera.lookAt(
-      new THREE.Vector3().lerpVectors(lookAt[0], lookAt[1], easedT)
-    );
+    camera.lookAt(new THREE.Vector3().lerpVectors(lookAt[0], lookAt[1], easedT));
     camera.zoom = (zoom[0] + (zoom[1] - zoom[0]) * easedT) * scaleFactor;
     camera.updateProjectionMatrix();
     rotating.rotation.y = r - r * easedT;
     currentCameraZoom = zoomInfos[3] == "dezoom" ? zoom[0] : zoom[1];
 
-    if ((name == "screen" || scene.position.x < 0) && w >= smallScreenSize)
-      scene.position.set(-1.2 * easedT, -0.5 * easedT, 0);
+    if ((name == "screen" || scene.position.x < 0) && w >= smallScreenSize) scene.position.set(-1.2 * easedT, -0.5 * easedT, 0);
 
     if (t > 0 && t < 1) requestAnimationFrame(animateZoom);
     else {
-      const mid = getScreenMiddle(screenMesh);
-      video.style.transform = `translate(-50%, -50%) translate(${mid.x}px, ${mid.y}px)`;
-      videoControls.style.transform = `translate(-50%,0) translate(${mid.x}px, 0)`;
-      videoControls.style.top = `${getScreenMiddle(screenMesh).y + video.clientHeight / 2}px`;
-      videoControls.style.width = `${video.clientWidth}px`;
-
-      if (name == "record") hits.classList.add("active");
-      else if (name == "books") books.classList.add("active");
-      else if (name == "calendar") calendar.classList.add("active");
-      else if (name == "screen") screenPresBox.classList.add("active");
-      else if (name == "dezoom") {
-        video.pause();
-        document.querySelectorAll('audio').forEach((audio) => {
-          audio.pause();
-          changePlayButton(audio, audio.parentElement.querySelector('.play-audio'));
-        });
-        changePlayButton(video, playVideo);
-      }
+      DisplayObjectInfoAfterZoom(name);
       isZooming = false;
     }
   }
@@ -258,55 +310,59 @@ function isHtml(e) {
   );
 }
 
+// params : pos, lookAt, zoom, name
 let zoomInfos = [globalCameraPos, globalCameraLookAt, 0.75, "dezoom"];
 
 function clickToZoom(event) {
   if (isHtml(event.target) || isZooming) return; // si je clique sur un élément html devant le canvas ou que je suis déjà entrain de zoomer
 
   const rect = renderer.domElement.getBoundingClientRect();
-  const coords = new THREE.Vector2(
-    ((event.clientX - rect.left) / rect.width) * 2 - 1,
-    -(((event.clientY - rect.top) / rect.height) * 2 - 1)
-  );
+  let coords = new THREE.Vector2(((event.clientX - rect.left) / rect.width) * 2 - 1, -(((event.clientY - rect.top) / rect.height) * 2 - 1));
+
+  if (isMobile) {
+    const touch = event.changedTouches[0];
+    coords = new THREE.Vector2(((touch.clientX - rect.left) / rect.width) * 2 - 1, -(((touch.clientY - rect.top) / rect.height) * 2 - 1));
+  }
+
   raycaster.setFromCamera(coords, camera);
   const intersects = raycaster.intersectObjects(objectsArray, true);
 
   if (intersects.length > 0) {
     const selectedObject = intersects[0].object;
 
-    if (selectedObject.name.startsWith("record") && zoomInfos[3] == "dezoom")
+    if (selectedObject.name.startsWith("record") && zoomInfos[3] == "dezoom") {
       zoomInfos = [recordCameraPos, recordCameraLookAt, 3, "record"];
-    else if (
-      selectedObject.name.startsWith("screen") &&
-      zoomInfos[3] == "dezoom"
-    )
+    } else if (selectedObject.name.startsWith("screen") && zoomInfos[3] == "dezoom") {
       zoomInfos = [screenCameraPos, screenCameraLookAt, 2, "screen"];
-    else if (
-      selectedObject.name.startsWith("calendar") &&
-      zoomInfos[3] == "dezoom"
-    )
+    } else if (selectedObject.name.startsWith("calendar") && zoomInfos[3] == "dezoom") {
       zoomInfos = [calendarCameraPos, calendarCameraLookAt, 5, "calendar"];
-    else if (
-      selectedObject.name.startsWith("books") &&
-      zoomInfos[3] == "dezoom"
-    )
+    } else if (selectedObject.name.startsWith("books") && zoomInfos[3] == "dezoom") {
       zoomInfos = [booksCameraPos, booksCameraLookAt, 3, "books"];
-    else if (
-      !selectedObject.name.startsWith(zoomInfos[3]) &&
-      zoomInfos[3] != "dezoom"
-    )
+    } else if (!selectedObject.name.startsWith(zoomInfos[3]) && zoomInfos[3] != "dezoom") {
       zoomInfos[3] = "dezoom";
-    else {
+    } else {
       return;
     }
 
     isZooming = true;
-    zoomOn(
-      [globalCameraPos, zoomInfos[0]],
-      [globalCameraLookAt, zoomInfos[1]],
-      [0.75, zoomInfos[2]],
-      zoomInfos[3]
-    );
+    if (isMobile) {
+      const camLookAt = new THREE.Vector3();
+      camera.getWorldDirection(camLookAt);
+      camLookAt.add(camera.position);
+
+      // [current cam pos, new cam pos], [cur look at, new look at], [cur zoom, new zoom], name of object
+      zoomOn([camera.position.clone(), camera.position.clone()], [camLookAt, camLookAt], [camera.zoom, camera.zoom], zoomInfos[3]);
+    } else {
+      zoomOn([globalCameraPos, zoomInfos[0]], [globalCameraLookAt, zoomInfos[1]], [0.75, zoomInfos[2]], zoomInfos[3]);
+    }
+  } else if (isMobile) {
+    const camLookAt = new THREE.Vector3();
+    camera.getWorldDirection(camLookAt);
+    camLookAt.add(camera.position);
+    
+    isZooming = true;
+    zoomInfos[3] = "dezoom";
+    zoomOn([camera.position.clone(), camera.position.clone()], [camLookAt, camLookAt], [camera.zoom, camera.zoom], zoomInfos[3]);
   }
 }
 
@@ -329,8 +385,10 @@ function getScreenCorners(mesh, camera, canvas) {
 
   const projectionMatrix = camera.projectionMatrix;
   const modelViewMatrix = camera.matrixWorldInverse;
-  let minX = Infinity, maxX = -Infinity;
-  let minY = Infinity, maxY = -Infinity;
+  let minX = Infinity,
+    maxX = -Infinity;
+  let minY = Infinity,
+    maxY = -Infinity;
 
   points.forEach((p) => {
     p.applyMatrix4(modelViewMatrix); // Transformation en espace de la caméra
@@ -354,10 +412,8 @@ function getScreenCorners(mesh, camera, canvas) {
 function getScreenMiddle(mesh) {
   const corners = getScreenCorners(mesh, camera, container);
 
-  const midX =
-    corners.topLeft.x + (corners.bottomRight.x - corners.topLeft.x) / 2;
-  const midY =
-    corners.topLeft.y + (corners.bottomRight.y - corners.topLeft.y) / 2;
+  const midX = corners.topLeft.x + (corners.bottomRight.x - corners.topLeft.x) / 2;
+  const midY = corners.topLeft.y + (corners.bottomRight.y - corners.topLeft.y) / 2;
 
   return { x: midX, y: midY };
 }
@@ -379,8 +435,7 @@ function startTurning(e) {
 }
 
 function stopTurning(e) {
-  if (Math.abs(velocity) < VELOCITY_THRESHOLD)
-    clickToZoom(e);
+  if (Math.abs(velocity) < VELOCITY_THRESHOLD) clickToZoom(e);
   isDragging = false;
 }
 
@@ -399,17 +454,20 @@ function turn(e) {
   prevMousePosX = e.clientX;
 }
 
-window.addEventListener("mousedown", (e) => startTurning(e));
-window.addEventListener("mouseup", (e) => stopTurning(e));
-window.addEventListener("mousemove", (e) => turn(e));
-
-window.addEventListener("touchstart", (e) => startTurning(e.touches[0]));
-window.addEventListener("touchend", (e) => stopTurning(e));
-window.addEventListener("touchmove", (e) => turn(e.touches[0]));
+if (!isMobile) {
+  window.addEventListener("mousedown", (e) => startTurning(e));
+  window.addEventListener("mouseup", (e) => stopTurning(e));
+  window.addEventListener("mousemove", (e) => turn(e));
+} else {
+  window.addEventListener("touchend", (e) => stopTurning(e));
+}
+// window.addEventListener("touchstart", (e) => startTurning(e.touches[0]));
+// window.addEventListener("touchmove", (e) => turn(e.touches[0]));
 
 // -----------------------------------
 // ------------- RESIZE --------------
 // -----------------------------------
+
 
 const video = document.getElementById("video");
 video.style.height = `${250 * scaleFactor}px`;
@@ -426,22 +484,16 @@ window.addEventListener("resize", () => {
   camera.top = d;
   camera.bottom = -d;
 
-  camera.zoom = currentCameraZoom * scaleFactor;
-
-  video.style.height = `${250 * scaleFactor}px`;
-
+  camera.zoom = currentCameraZoom * scaleFactor;  
+  
   if (zoomInfos[3] == "screen") {
     if (w < smallScreenSize) scene.position.set(0, 0, 0);
     else scene.position.set(-1.2, -0.5, 0);
   }
-
+  
   if (descriptionOn) handleThumbnailsHidden();
-
-  const mid = getScreenMiddle(screenMesh);
-  video.style.transform = `translate(-50%, -50%) translate(${mid.x}px, ${mid.y}px)`;
-  videoControls.style.transform = `translate(-50%, 0) translate(${mid.x}px, 0)`;
-  videoControls.style.top = `${mid.y + video.clientHeight / 2}px`;
-  videoControls.style.width = `${video.clientWidth}px`;
+  
+  SetVideoStyle(video, screenMesh)
 
   camera.updateProjectionMatrix();
   renderer.setSize(w, h);
@@ -467,8 +519,8 @@ function getBookPage(src) {
 
 const bookList = ["Grenouille", "Fieldwave", "Für Elise"];
 const booksPagesCount = {
-  "Grenouille": 6,
-  "Fieldwave": 6,
+  Grenouille: 6,
+  Fieldwave: 6,
   "Für Elise": 5,
 };
 
@@ -482,12 +534,7 @@ const booksPrevPage = document.getElementById("booksPrevPage");
 const booksNextPage = document.getElementById("booksNextPage");
 const booksNextBook = document.getElementById("booksNextBook");
 
-const booksButtons = [
-  booksPrevBook,
-  booksPrevPage,
-  booksNextPage,
-  booksNextBook,
-];
+const booksButtons = [booksPrevBook, booksPrevPage, booksNextPage, booksNextBook];
 
 function clickOnBooksButton(button) {
   const pageCount = booksPagesCount[bookList[bookIndex]];
@@ -498,42 +545,38 @@ function clickOnBooksButton(button) {
   } else if (button === "booksNextBook") {
     bookIndex = (bookIndex + 1) % bookList.length;
     bookPage = 0;
-  } else if (button === "booksPrevPage")
-    bookPage = (bookPage - 1 + pageCount) % pageCount;
+  } else if (button === "booksPrevPage") bookPage = (bookPage - 1 + pageCount) % pageCount;
   else if (button === "booksNextPage") bookPage = (bookPage + 1) % pageCount;
 
   const img = `${bookList[bookIndex]}_${bookPage}`;
   booksImg.setAttribute("src", `/static/img/books/${img}.png`);
   booksTitle.innerText = bookList[bookIndex];
-  arrowTourner.style.opacity = '0';
-  arrowChanger.style.opacity = '0';
-
+  arrowTourner.style.opacity = "0";
+  arrowChanger.style.opacity = "0";
 }
 
 booksButtons.forEach((button) => {
   button.addEventListener("click", (e) => clickOnBooksButton(button.id));
 });
 
-const arrowTourner = document.getElementById('arrowTourner');
-const arrowChanger = document.getElementById('arrowChanger');
+const arrowTourner = document.getElementById("arrowTourner");
+const arrowChanger = document.getElementById("arrowChanger");
 
-document.querySelectorAll('.single-arrow').forEach(button => {
-  button.addEventListener('mouseenter', () => {
-    if (!bookPage && !bookIndex)
-      arrowTourner.style.opacity = '1';
+document.querySelectorAll(".single-arrow").forEach((button) => {
+  button.addEventListener("mouseenter", () => {
+    if (!bookPage && !bookIndex) arrowTourner.style.opacity = "1";
   });
-  button.addEventListener('mouseleave', () => {
-    arrowTourner.style.opacity = '0';
+  button.addEventListener("mouseleave", () => {
+    arrowTourner.style.opacity = "0";
   });
 });
 
-document.querySelectorAll('.double-arrow').forEach(button => {
-  button.addEventListener('mouseenter', () => {
-    if (!bookPage && !bookIndex)
-      arrowChanger.style.opacity = '1';
+document.querySelectorAll(".double-arrow").forEach((button) => {
+  button.addEventListener("mouseenter", () => {
+    if (!bookPage && !bookIndex) arrowChanger.style.opacity = "1";
   });
-  button.addEventListener('mouseleave', () => {
-    arrowChanger.style.opacity = '0';
+  button.addEventListener("mouseleave", () => {
+    arrowChanger.style.opacity = "0";
   });
 });
 
@@ -555,10 +598,8 @@ const calendarNext = document.getElementById("calendarNext");
 const calendarButtons = [calendarPrev, calendarNext];
 
 function clickOnCalendarButton(button) {
-  if (button === "calendarPrev")
-    calendarPage = (calendarPage - 1 + calendarPagesCount) % calendarPagesCount;
-  else if (button === "calendarNext")
-    calendarPage = (calendarPage + 1) % calendarPagesCount;
+  if (button === "calendarPrev") calendarPage = (calendarPage - 1 + calendarPagesCount) % calendarPagesCount;
+  else if (button === "calendarNext") calendarPage = (calendarPage + 1) % calendarPagesCount;
 
   calendarImg.setAttribute("src", `/static/img/calendar/${calendarPage}.jpg`);
 }
@@ -594,24 +635,24 @@ function handleThumbnailsHidden() {
 
 thumbnails.forEach((thumbnail) => {
   thumbnail.addEventListener("click", (event) => {
-    let description = document.getElementById(
-      event.currentTarget.id + "Description"
-    );
+    let description = document.getElementById(event.currentTarget.id + "Description");
     if (description) toggleShowDescription(description);
     if (!video.children[0].src.includes(thumbnail.id)) {
-      video.children[0].setAttribute(
-        "src",
-        "/static/videos/" + thumbnail.id + ".mp4"
-      );
+      video.children[0].setAttribute("src", "/static/videos/" + thumbnail.id + ".mp4");
       video.load();
       video.pause();
       changePlayButton(video, playVideo);
       video.currentTime = 0;
       progressBarVideo.value = 0;
 
-      video.addEventListener('loadedmetadata', () => {
-        videoControls.style.width = `${video.clientWidth}px`;
-      }, { once: true });
+      video.addEventListener(
+        "loadedmetadata",
+        () => {
+          videoControls.style.width = `${video.clientWidth}px`;
+          SetVideoStyle(video, screenMesh);
+        },
+        { once: true },
+      );
     }
   });
 });
@@ -626,17 +667,17 @@ thumbnailDescriptions.forEach((description) => {
 // --------- VIDEO TIMELINE ----------
 // -----------------------------------
 
-const videoControls = document.getElementById('videoControls');
-const progressBarVideo = document.getElementById('progressBarVideo');
-const playVideo = videoControls.querySelector('.play-video');
+const videoControls = document.getElementById("videoControls");
+const progressBarVideo = document.getElementById("progressBarVideo");
+const playVideo = videoControls.querySelector(".play-video");
 
 function changePlayButton(file, button) {
-  if (file.paused) button.textContent = '⏵';
-  else button.textContent = '⏸';
+  if (file.paused) button.textContent = "⏵";
+  else button.textContent = "⏸";
 }
 
-[playVideo, video].forEach(v => {
-  v.addEventListener('click', () => {
+[playVideo, video].forEach((v) => {
+  v.addEventListener("click", () => {
     if (video.paused) video.play();
     else video.pause();
     changePlayButton(video, playVideo);
@@ -646,7 +687,7 @@ function changePlayButton(file, button) {
 let isSeeking = false; // isSeeking permet de pas avoir de glitch quand on met a jour currentTime
 
 // Mettre à jour la barre quand la vidéo joue
-video.addEventListener('timeupdate', () => {
+video.addEventListener("timeupdate", () => {
   if (!isNaN(video.duration) && !isSeeking) {
     const value = (video.currentTime / video.duration) * 100;
     progressBarVideo.value = value;
@@ -654,17 +695,17 @@ video.addEventListener('timeupdate', () => {
 });
 
 // Quand on clique sur la barre
-progressBarVideo.addEventListener('click', (e) => {
+progressBarVideo.addEventListener("click", (e) => {
   isSeeking = true;
   const rect = progressBarVideo.getBoundingClientRect();
   const clickX = e.clientX - rect.left;
   const ratio = clickX / rect.width;
   const time = ratio * video.duration;
   video.currentTime = time;
-  progressBarVideo.value = time / video.duration * 100;
+  progressBarVideo.value = (time / video.duration) * 100;
 });
 
-progressBarVideo.addEventListener('change', () => {
+progressBarVideo.addEventListener("change", () => {
   isSeeking = false;
 });
 
@@ -672,20 +713,20 @@ progressBarVideo.addEventListener('change', () => {
 // --------- AUDIO TIMELINE ----------
 // -----------------------------------
 
-const progressBarsAudio = document.querySelectorAll('.progress-bar-audio');
+const progressBarsAudio = document.querySelectorAll(".progress-bar-audio");
 
 progressBarsAudio.forEach((bar) => {
   const parent = bar.parentElement;
-  const audio = parent.querySelector('audio');
-  const playAudio = parent.querySelector('.play-audio');
+  const audio = parent.querySelector("audio");
+  const playAudio = parent.querySelector(".play-audio");
 
-  playAudio.addEventListener('click', () => {
+  playAudio.addEventListener("click", () => {
     if (audio.paused) audio.play();
     else audio.pause();
     changePlayButton(audio, playAudio);
   });
 
-  bar.addEventListener('click', (e) => {
+  bar.addEventListener("click", (e) => {
     const rect = bar.getBoundingClientRect();
     const clickX = e.clientX - rect.left;
     const ratio = clickX / rect.width;
@@ -694,13 +735,12 @@ progressBarsAudio.forEach((bar) => {
   });
 
   // Mettre à jour la barre quand l'audio joue
-  audio.addEventListener('timeupdate', () => {
+  audio.addEventListener("timeupdate", () => {
     if (!isNaN(audio.duration) && !isSeeking) {
       const value = (audio.currentTime / audio.duration) * 100;
       bar.value = value;
     }
   });
-
 });
 
 // -----------------------------------
@@ -714,18 +754,16 @@ function toggleAudioDescription(target) {
     if (r != target) r.classList.remove("active");
   });
   target.classList.toggle("active");
-  document.querySelectorAll('audio').forEach((audio) => {
+  document.querySelectorAll("audio").forEach((audio) => {
     audio.pause();
-    changePlayButton(audio, audio.parentElement.querySelector('.play-audio'));
+    changePlayButton(audio, audio.parentElement.querySelector(".play-audio"));
   });
 }
 
 const hitsRows = document.querySelectorAll(".hits-row");
 hitsRows.forEach((r) => {
   r.addEventListener("click", (e) => {
-    if (!e.target.classList.contains('progress-bar-audio')
-      && !e.target.classList.contains('play-audio'))
-      toggleAudioDescription(e.target);
+    if (!e.target.classList.contains("progress-bar-audio") && !e.target.classList.contains("play-audio")) toggleAudioDescription(e.target);
   });
 });
 
@@ -758,8 +796,7 @@ switchMode.addEventListener("click", () => {
     body.style.backgroundColor = darkBlue;
   } else {
     let colorIndex = prevIndex;
-    while (colorIndex == prevIndex)
-      colorIndex = Math.floor(Math.random() * colors.length);
+    while (colorIndex == prevIndex) colorIndex = Math.floor(Math.random() * colors.length);
     prevIndex = colorIndex;
     body.style.backgroundColor = colors[colorIndex];
   }
@@ -773,14 +810,13 @@ function wave(mesh) {
     const original = positionAttr.originalPosition;
     const time = clock.getElapsedTime();
 
-    if (!mesh.geometry.boundingBox)
-      mesh.geometry.computeBoundingBox();
+    if (!mesh.geometry.boundingBox) mesh.geometry.computeBoundingBox();
 
     const bounds = mesh.geometry.boundingBox;
-    const minX = bounds.min.y, maxX = bounds.max.y;
+    const minX = bounds.min.y,
+      maxX = bounds.max.y;
     const rangeX = maxX - minX;
     for (let i = 0; i < positionAttr.count; i++) {
-
       const [x, y, z] = [original[i * 3], original[i * 3 + 1], original[i * 3 + 2]];
       const weightX = (y - minX) / rangeX;
 
@@ -788,10 +824,11 @@ function wave(mesh) {
       const frequency = 3;
       const width = 0.03;
 
-      const wave = Math.cos(y * wavelength + time * frequency) * width * weightX; // ajuster la fréquence et amplitude + poids permet de faire moins d'un côté 
+      const wave = Math.cos(y * wavelength + time * frequency) * width * weightX; // ajuster la fréquence et amplitude + poids permet de faire moins d'un côté
       positionAttr.array[i * 3] = x + wave; // onde sur x
     }
     positionAttr.needsUpdate = true;
+    mesh.geometry.computeVertexNormals();
   }
 }
 
@@ -800,15 +837,20 @@ function wave(mesh) {
 // -----------------------------------
 
 function animate() {
-  if (zoomInfos[3] == "dezoom") {
+  if (!isMobile && zoomInfos[3] == "dezoom") {
     // pas de rotation de la scène si on est dans le zoom
     rotating.rotation.y += velocity;
     rotating.rotation.y %= 2 * Math.PI;
     velocity *= 0.95;
+    if (Math.abs(velocity) < VELOCITY_THRESHOLD) velocity = 0;
   }
-  rabbits.forEach(rabbit => wave(rabbit));
 
-  if (Math.abs(velocity) < VELOCITY_THRESHOLD) velocity = 0;
+  if (isMobile && controls) {
+    controls.update();
+  }
+
+  rabbits.forEach((rabbit) => wave(rabbit));
+
   requestAnimationFrame(animate);
   renderer.render(scene, camera);
 }

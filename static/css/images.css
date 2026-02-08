@@ -1,3 +1,7 @@
+html, body {
+  min-width: 50px;
+}
+
 #tagsAndImages {
   display: flex;
   flex-direction: column;

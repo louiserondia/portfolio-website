@@ -1,3 +1,13 @@
+html, body{
+    overflow: hidden;
+    touch-action: none;
+    min-width: 50px;
+}
+
+#threejsContainer {
+    touch-action: none;
+} // this and above : no scroll and zoom 
+
 img {
     -webkit-user-select: none;
     -khtml-user-select: none;
@@ -46,7 +56,7 @@ img {
                 cursor: pointer;
                 padding-bottom: 0.2rem;
                 line-height: 100%;
-                transform: scaleX(1.5);
+                transform: sleX(1.5);
 
                 user-select: none;
                 -moz-user-select: none;
@@ -169,6 +179,11 @@ img {
 
 }
 
+@media (max-width: 650px) {
+    #topRightButtons {
+        flex-direction: row !important;
+    }
+}
 
 @media (max-width: 801px) {
     #screenPresentation {
@@ -176,7 +191,7 @@ img {
 
         #description {
             width: 80%;
-            height: 45%;
+            height:auto;
             max-width: 400px;
             max-height: 225px;
 
@@ -237,12 +252,15 @@ img {
         width: 100%;
         height: 66vh;
         max-width: 750px;
-
+        
         display: flex;
         flex-direction: column;
         gap: 1rem;
+        justify-content: space-around;
+        gap: 1rem;
+        flex: 1 1 auto;
 
-        margin: 4rem;
+        margin: 1.5rem;
         padding: 1rem;
         overflow-y: auto;
         border-radius: 10px;
